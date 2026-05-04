@@ -6,7 +6,7 @@ const SITE = 'https://aiclientbuilder.com';
 export const GET: APIRoute = () => {
   const urls = [
     { loc: `${SITE}/`, priority: '1.0' },
-    ...niches.map((n) => ({ loc: `${SITE}/${n.slug}/`, priority: '0.9' })),
+    ...niches.map((n) => ({ loc: `${SITE}/${n.slug}`, priority: '0.9' })),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
