@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Client Builder — Stop losing $40,000/mo in missed calls</title>
+<meta name="description" content="Your AI receptionist answers every call, books every job, and follows up on every lead — 24/7, 365. Live in 7 days. Cancel anytime." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style is:global>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #121212;
+    --surface2: #1a1a1a;
+    --ink: #fbf9f4;
+    --ink2: #cfcdc7;
+    --ink3: #7a7872;
+    --line: rgba(255,255,255,0.08);
+    --line2: rgba(255,255,255,0.14);
+    --accent: #d6ff4a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+  /* NAV */
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(10,10,10,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; max-width: 1180px; margin: 0 auto; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-mark { width: 28px; height: 28px; border-radius: 6px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .logo-text { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 14px; letter-spacing: -0.01em; line-height: 1; }
+  .logo-text .dim { opacity: 0.5; }
+  .nav-links { display: flex; align-items: center; gap: 24px; }
+  .nav-links a { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink2); font-weight: 500; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { display: flex; align-items: center; gap: 10px; }
+  .login { font-family: 'JetBrains Mono', monospace; color: var(--ink2); font-size: 13px; font-weight: 500; }
+
+  .btn { border: none; cursor: pointer; font-family: 'JetBrains Mono', monospace; transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: var(--accent); color: var(--bg); padding: 9px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(214,255,74,0.4); }
+  .btn-primary-lg { background: var(--accent); color: var(--bg); padding: 14px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+  .btn-primary-lg:hover { transform: translateY(-1px); box-shadow: 0 12px 28px -10px rgba(214,255,74,0.5); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line2); padding: 14px 22px; border-radius: 8px; font-size: 14px; font-weight: 500; }
+  .btn-ghost:hover { background: var(--surface); border-color: rgba(255,255,255,0.25); }
+  .btn-xl { padding: 18px 32px; border-radius: 8px; font-size: 16px; font-weight: 700; }
+
+  .pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line2); background: rgba(214,255,74,0.04); color: var(--accent); font-size: 12px; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+
+  .trust-strip { display: flex; flex-wrap: wrap; gap: 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink2); }
+  .trust-strip span { display: inline-flex; align-items: center; gap: 6px; }
+  .trust-strip .gd { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* HERO */
+  .hero { padding: 88px 32px 64px; border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
+  .hero-grid { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 32px 32px; -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 75%); mask-image: radial-gradient(circle at center, black 20%, transparent 75%); pointer-events: none; }
+  .hero h1 { font-family: 'Inter Tight', sans-serif; font-size: clamp(48px, 8vw, 88px); font-weight: 700; line-height: 0.96; letter-spacing: -0.045em; margin: 28px 0 28px; max-width: 1100px; }
+  .hero h1 em { color: var(--accent); font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 600; letter-spacing: -0.01em; }
+  .hero-sub { font-size: 19px; line-height: 1.55; color: var(--ink2); max-width: 680px; margin: 0 0 36px; }
+  .hero-ctas { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+
+  /* TERMINAL */
+  .terminal { background: var(--surface); border: 1px solid var(--line2); border-radius: 12px; box-shadow: 0 30px 80px -30px rgba(0,0,0,0.8), 0 0 0 1px rgba(214,255,74,0.06); overflow: hidden; margin-top: 48px; }
+  .terminal-bar { padding: 12px 16px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink3); }
+  .terminal-dots { display: flex; gap: 6px; }
+  .terminal-dot { width: 11px; height: 11px; border-radius: 50%; background: #3a3a3a; }
+  .terminal-dot.live { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .terminal-body { padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: var(--ink2); min-height: 280px; }
+  .term-line { opacity: 0; transform: translateY(2px); animation: term-in 0.18s ease forwards; }
+  .term-cursor { display: inline-block; width: 8px; height: 16px; background: var(--accent); margin-top: 6px; animation: term-blink 1s infinite; vertical-align: middle; }
+  .prompt { color: var(--accent); }
+  .cmd { color: var(--ink); }
+  .out { color: var(--ink2); }
+  .hi { color: var(--accent); font-weight: 600; }
+  @keyframes term-in { to { opacity: 1; transform: none; } }
+  @keyframes term-blink { 50% { opacity: 0; } }
+
+  .eyebrow { font-size: 12px; color: var(--accent); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+  .h2 { font-family: 'Inter Tight', sans-serif; font-size: clamp(36px, 5vw, 52px); font-weight: 600; line-height: 1.02; letter-spacing: -0.035em; margin: 0; }
+  .h2 em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 500; color: var(--accent); }
+
+  /* PAIN */
+  .pain { padding: 96px 32px; border-bottom: 1px solid var(--line); }
+  .pain-head { max-width: 800px; margin-bottom: 56px; }
+  .pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .pain-cell { padding: 36px 32px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .pain-stat { font-family: 'Inter Tight', sans-serif; font-size: 88px; font-weight: 700; color: var(--accent); letter-spacing: -0.05em; line-height: 1; margin-bottom: 14px; }
+  .pain-label { font-family: 'Inter Tight', sans-serif; font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 14px; line-height: 1.3; }
+  .pain-body { font-size: 15px; color: var(--ink3); line-height: 1.55; margin: 0; }
+
+  /* STATS */
+  .stats { padding: 64px 32px; border-bottom: 1px solid var(--line); }
+  .stats-grid { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .stat { border-left: 1px solid var(--line2); padding-left: 24px; }
+  .stat-v { font-family: 'Inter Tight', sans-serif; font-size: 56px; font-weight: 700; color: var(--accent); letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px; }
+  .stat-l { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* HOW */
+  .how { padding: 96px 32px; border-bottom: 1px solid var(--line); }
+  .how-head { margin-bottom: 56px; }
+  .how-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
+  .how-line { position: absolute; top: 11px; left: 10%; right: 10%; height: 1px; background: var(--line2); z-index: 0; }
+  .how-step { position: relative; padding-right: 16px; z-index: 1; }
+  .how-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); margin-bottom: 18px; display: flex; align-items: center; justify-content: center; }
+  .how-dot-inner { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .how-d { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.08em; }
+  .how-step h4 { font-family: 'Inter Tight', sans-serif; font-size: 20px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .how-step p { font-size: 13px; color: var(--ink3); line-height: 1.5; margin: 0; }
+
+  /* FEATURES */
+  .features { padding: 96px 32px; border-bottom: 1px solid var(--line); }
+  .features-head { max-width: 760px; margin-bottom: 64px; }
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .feature { padding: 32px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); min-height: 220px; }
+  .feature-k { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); margin-bottom: 18px; letter-spacing: 0.05em; }
+  .feature h3 { font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.02em; line-height: 1.2; }
+  .feature p { font-size: 14px; color: var(--ink3); line-height: 1.55; margin: 0; }
+
+  /* DEMO */
+  .demo { padding: 96px 32px; border-bottom: 1px solid var(--line); background: var(--surface); }
+  .demo-head { margin-bottom: 48px; max-width: 720px; }
+  .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .agent-card { background: var(--bg); border: 1px solid var(--line2); border-radius: 12px; padding: 24px; }
+  .agent-head { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .agent-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-bottom: 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .agent-stat { padding: 20px 8px; text-align: center; }
+  .agent-stat + .agent-stat { border-left: 1px solid var(--line); }
+  .agent-stat-v { font-family: 'Inter Tight', sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; white-space: nowrap; }
+  .agent-stat-l { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink3); margin-top: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .metric-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; }
+  .metric-row + .metric-row { border-top: 1px dashed var(--line); }
+  .metric-l { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink3); }
+  .metric-v { font-family: 'Inter Tight', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
+  .metric-d { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); margin-left: 10px; }
+  .trace-card { background: var(--bg); border: 1px solid var(--line2); border-radius: 12px; padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink2); }
+  .trace-row { display: flex; gap: 10px; padding: 4px 0; border-bottom: 1px dashed var(--line); flex-wrap: wrap; }
+  .trace-t { color: var(--ink3); flex-shrink: 0; }
+  .trace-e { color: var(--accent); flex-shrink: 0; min-width: 80px; }
+
+  /* TESTIMONIALS */
+  .testimonials { padding: 96px 32px; border-bottom: 1px solid var(--line); }
+  .testimonial-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .testimonial { background: var(--surface); border: 1px solid var(--line2); border-radius: 12px; padding: 28px; display: flex; flex-direction: column; }
+  .testimonial.placeholder { border: 1px dashed var(--line2); background: transparent; opacity: 0.7; }
+  .testimonial-q { font-family: 'Inter Tight', sans-serif; font-size: 18px; font-weight: 500; line-height: 1.4; margin: 0 0 20px; letter-spacing: -0.015em; flex: 1; }
+  .testimonial-meta { font-size: 12px; color: var(--ink3); font-style: italic; margin-top: 12px; }
+  .testimonial-tag { display: inline-block; padding: 6px 12px; border-radius: 6px; background: rgba(214,255,74,0.1); color: var(--accent); font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 600; align-self: flex-start; margin-top: 16px; }
+  .placeholder-tag { display: inline-block; padding: 4px 10px; border-radius: 6px; background: rgba(255,255,255,0.06); color: var(--ink3); font-size: 11px; font-family: 'JetBrains Mono', monospace; margin-bottom: 14px; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* FOUNDER */
+  .founder { padding: 96px 32px; border-bottom: 1px solid var(--line); }
+  .founder-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: flex-start; }
+  .founder-body p { font-size: 17px; line-height: 1.65; color: var(--ink2); margin: 0 0 20px; max-width: 620px; }
+  .founder-body p.bold { color: var(--ink); font-weight: 600; }
+  .founder-sig { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 22px; color: var(--ink); margin-top: 24px; }
+  .founder-photo { aspect-ratio: 4/5; background: var(--surface); border: 1px dashed var(--line2); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--ink3); font-family: 'JetBrains Mono', monospace; font-size: 12px; text-align: center; padding: 32px; line-height: 1.6; }
+
+  /* PRICING */
+  .pricing { padding: 96px 32px; border-bottom: 1px solid var(--line); }
+  .pricing-head { text-align: center; margin-bottom: 56px; }
+  .pricing-head .h2 { margin-bottom: 12px; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .tier { background: var(--bg); border: 1px solid var(--line2); border-radius: 12px; padding: 32px; position: relative; }
+  .tier.highlight { background: var(--surface); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(214,255,74,0.06); }
+  .tier-badge { position: absolute; top: -10px; left: 24px; padding: 4px 10px; background: var(--accent); color: var(--bg); border-radius: 999px; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
+  .tier-name { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--accent); margin-bottom: 20px; }
+  .tier-price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 6px; }
+  .tier-price-v { font-family: 'Inter Tight', sans-serif; font-size: 44px; font-weight: 700; letter-spacing: -0.04em; }
+  .tier-price-mo { font-size: 16px; color: var(--ink3); margin-left: 2px; }
+  .tier-setup { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink3); margin-bottom: 12px; }
+  .tier-desc { font-size: 13px; color: var(--ink3); line-height: 1.5; margin: 0 0 24px; font-family: 'JetBrains Mono', monospace; min-height: 40px; }
+  .tier-cta { width: 100%; padding: 12px; background: transparent; color: var(--ink); border: 1px solid var(--line2); border-radius: 6px; font-size: 13px; font-weight: 600; font-family: 'JetBrains Mono', monospace; cursor: pointer; margin-bottom: 24px; transition: all 0.15s; }
+  .tier-cta:hover { border-color: var(--accent); color: var(--accent); }
+  .tier.highlight .tier-cta { background: var(--accent); color: var(--bg); border: none; }
+  .tier.highlight .tier-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(214,255,74,0.4); }
+  .tier-features { display: flex; flex-direction: column; gap: 10px; }
+  .tier-feature { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--ink2); }
+  .tier-feature .check { color: var(--accent); font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+  .pricing-math { max-width: 760px; margin: 36px auto 0; padding: 24px 28px; background: var(--surface); border: 1px solid var(--line2); border-left: 3px solid var(--accent); border-radius: 8px; font-size: 16px; color: var(--ink2); line-height: 1.55; }
+  .pricing-math strong { color: var(--ink); }
+
+  /* FAQ */
+  .faq { padding: 96px 32px; border-bottom: 1px solid var(--line); background: var(--surface); }
+  .faq-inner { max-width: 800px; margin: 0 auto; }
+  .faq-head { text-align: center; margin-bottom: 48px; }
+  .faq-list { border-top: 1px solid var(--line2); }
+  .faq-item { border-bottom: 1px solid var(--line2); }
+  .faq-q { width: 100%; text-align: left; background: transparent; border: none; padding: 24px 0; font-size: 18px; font-family: 'Inter Tight', sans-serif; font-weight: 500; color: var(--ink); cursor: pointer; display: flex; justify-content: space-between; align-items: center; letter-spacing: -0.015em; gap: 24px; }
+  .faq-num { color: var(--accent); font-family: 'JetBrains Mono', monospace; margin-right: 12px; font-size: 13px; }
+  .faq-plus { font-size: 22px; color: var(--accent); transition: transform 0.25s ease; display: inline-block; line-height: 1; font-weight: 300; flex-shrink: 0; }
+  .faq-item.open .faq-plus { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .faq-item.open .faq-a { max-height: 320px; }
+  .faq-a p { font-size: 15px; color: var(--ink3); line-height: 1.6; margin: 0 0 24px 36px; max-width: 680px; }
+
+  /* CTA */
+  .cta { padding: 96px 32px 64px; position: relative; overflow: hidden; }
+  .cta-glow { position: absolute; inset: 0; background: radial-gradient(circle at 70% 30%, rgba(214,255,74,0.08), transparent 50%); }
+  .cta-inner { max-width: 1180px; margin: 0 auto; position: relative; }
+  .cta-head { text-align: center; max-width: 880px; margin: 0 auto 36px; }
+  .cta-head h2 { font-family: 'Inter Tight', sans-serif; font-size: clamp(48px, 8vw, 72px); font-weight: 700; line-height: 0.98; letter-spacing: -0.04em; margin: 0 0 20px; }
+  .cta-head h2 em { color: var(--accent); font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 500; }
+  .cta-head p { font-size: 18px; color: var(--ink2); line-height: 1.5; margin: 0 0 36px; }
+  .cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .cta-trust { justify-content: center; }
+
+  .footer { margin-top: 80px; padding-top: 32px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; max-width: 1180px; margin-left: auto; margin-right: auto; }
+  .footer-links { display: flex; gap: 24px; font-size: 13px; color: var(--ink3); font-family: 'JetBrains Mono', monospace; flex-wrap: wrap; }
+  .footer-meta { font-size: 12px; color: var(--ink3); font-family: 'JetBrains Mono', monospace; }
+
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .pain-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .features-grid, .demo-grid, .testimonial-grid, .pricing-grid, .founder-grid { grid-template-columns: 1fr; }
+    .how-grid { grid-template-columns: 1fr; gap: 24px; }
+    .how-line { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+          <path d="M8 11 L12 16 L8 21" stroke="#d6ff4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="14" y="20" width="10" height="1.6" fill="#d6ff4a" rx="0.8"/>
+        </svg>
+      </span>
+      <span class="logo-text"><span class="dim">~/</span>aiclientbuilder</span>
+    </a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#">Login</a>
+    </div>
+    <div class="nav-cta">
+      <button class="btn btn-primary">→ Get my AI receptionist</button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="container" style="position: relative;">
+    <div class="pill">
+      <span class="dot"></span>
+      LIVE · Now booking 50 home-service operators in the US
+    </div>
+    <h1>Stop losing $40,000 a month in <em>missed calls.</em></h1>
+    <p class="hero-sub">
+      Your AI receptionist answers every call, books every job, and follows up on every lead — 24/7, 365. While you're on the roof, in a crawlspace, or asleep. Live in 7 days. Cancel anytime.
+    </p>
+    <div class="hero-ctas">
+      <button class="btn btn-primary-lg">$ get-my-ai-receptionist →</button>
+      <button class="btn btn-ghost">▶ watch 90-second demo</button>
+    </div>
+    <div class="trust-strip">
+      <span><span class="gd"></span>No contracts</span>
+      <span><span class="gd"></span>30-day money-back</span>
+      <span><span class="gd"></span>Built on systems we deployed for 200+ home-service operators</span>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dots">
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot live"></span>
+        </div>
+        <span style="margin-left: 8px;">~/plumbing-co/acb · zsh</span>
+        <span style="margin-left: auto; color: var(--accent);">● live</span>
+      </div>
+      <div class="terminal-body" id="terminal-body"></div>
+    </div>
+  </div>
+</section>
+
+<section class="pain">
+  <div class="container">
+    <div class="pain-head">
+      <div class="eyebrow">// the math nobody shows you</div>
+      <h2 class="h2">You're not losing leads. You're losing <em>jobs.</em></h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-cell">
+        <div class="pain-stat">62%</div>
+        <div class="pain-label">of after-hours calls go unanswered in home services</div>
+        <p class="pain-body">Every one is a customer who calls the next guy on Google. Average job value: $487. Multiply by your missed calls last month.</p>
+      </div>
+      <div class="pain-cell">
+        <div class="pain-stat">5 min</div>
+        <div class="pain-label">is the window before a web lead goes cold</div>
+        <p class="pain-body">If you take 30 minutes to call back a Yelp lead, your close rate drops 80%. Not a typo. Eighty percent.</p>
+      </div>
+      <div class="pain-cell">
+        <div class="pain-stat">73%</div>
+        <div class="pain-label">of past customers never get a follow-up call</div>
+        <p class="pain-body">Your best buyer is the one you already worked for. Most of you never call them again. That's a six-figure mistake hiding in your CRM.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-v">7d</div><div class="stat-l">avg. time to live</div></div>
+    <div class="stat"><div class="stat-v">200+</div><div class="stat-l">systems deployed</div></div>
+    <div class="stat"><div class="stat-v">$0</div><div class="stat-l">long-term contracts</div></div>
+    <div class="stat"><div class="stat-v">24/7</div><div class="stat-l">always answering</div></div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="container">
+    <div class="how-head">
+      <div class="eyebrow">// process</div>
+      <h2 class="h2">From signup to live in 7 days. Then it just works.</h2>
+    </div>
+    <div class="how-grid">
+      <div class="how-line"></div>
+      <div class="how-step"><div class="how-dot"><div class="how-dot-inner"></div></div><div class="how-d">DAY 1</div><h4>Audit</h4><p>30-min onboarding call. We learn your services, pricing, service area, and the questions you get asked 50 times a week.</p></div>
+      <div class="how-step"><div class="how-dot"><div class="how-dot-inner"></div></div><div class="how-d">DAY 2</div><h4>Train</h4><p>We build your AI on your business — your voice, your tone, your scripts. Not a generic chatbot. Your AI knows you charge $189 for a drain clearing in Tucson.</p></div>
+      <div class="how-step"><div class="how-dot"><div class="how-dot-inner"></div></div><div class="how-d">DAY 3-5</div><h4>Connect</h4><p>Plug into your phone line, GHL, Google Calendar, and (if you use them) ServiceTitan, Housecall Pro, or Jobber. Zero disruption to current ops.</p></div>
+      <div class="how-step"><div class="how-dot"><div class="how-dot-inner"></div></div><div class="how-d">DAY 6</div><h4>Test</h4><p>You call your AI. Your spouse calls your AI. We tune until you'd hire it as your front desk.</p></div>
+      <div class="how-step"><div class="how-dot"><div class="how-dot-inner"></div></div><div class="how-d">DAY 7</div><h4>Live</h4><p>Phone forwards activate. Your AI answers every call. You watch jobs hit your calendar in real time.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container">
+    <div class="features-head">
+      <div class="eyebrow">// capabilities</div>
+      <h2 class="h2">Everything a $60k/year receptionist does. For $497 a month.</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature"><div class="feature-k">01 //</div><h3>24/7 AI voice receptionist</h3><p>Answers every call in under 3 seconds. Sounds human. Books jobs straight to your calendar. Never sick, never on lunch, never on PTO.</p></div>
+      <div class="feature"><div class="feature-k">02 //</div><h3>Missed-call text-back</h3><p>The instant a call is missed (yours or your AI's), customer gets a text: "Hey, sorry we missed you — what can we help with?" 67% reply. You book the job.</p></div>
+      <div class="feature"><div class="feature-k">03 //</div><h3>Web form & Facebook lead AI</h3><p>Every form fill, FB lead, Yelp request gets a personalized reply in under 60 seconds. While your competitors are still asleep.</p></div>
+      <div class="feature"><div class="feature-k">04 //</div><h3>Past-customer reactivation</h3><p>Your AI calls/texts customers from your last 12 months. "Hey, last time we cleaned your drains — ready for an annual check?" Recurring revenue, on autopilot.</p></div>
+      <div class="feature"><div class="feature-k">05 //</div><h3>Review automation</h3><p>After every job, your AI texts the customer for a Google review at the perfect moment. Most operators see 3–5× their review velocity in 60 days.</p></div>
+      <div class="feature"><div class="feature-k">06 //</div><h3>GHL-native, you own the data</h3><p>Built on GoHighLevel — you own the workflows, the contacts, the data. We're not a black box. Cancel anytime, take everything with you.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="demo">
+  <div class="container">
+    <div class="demo-head">
+      <div class="eyebrow">// live preview</div>
+      <h2 class="h2">Watch your AI book a job at 2:47 AM.</h2>
+    </div>
+    <div class="demo-grid">
+      <div class="agent-card">
+        <div class="agent-head">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);"></span>
+          <span style="color: var(--ink);">agent: 24-7-receptionist</span>
+          <span style="margin-left:auto;color:var(--ink3);">uptime 99.97%</span>
+        </div>
+        <div class="agent-stats">
+          <div class="agent-stat"><div class="agent-stat-v" data-count="47">0</div><div class="agent-stat-l">leads handled</div></div>
+          <div class="agent-stat"><div class="agent-stat-v" data-count="19">0</div><div class="agent-stat-l">jobs booked</div></div>
+          <div class="agent-stat"><div class="agent-stat-v">47s</div><div class="agent-stat-l">avg time-to-book</div></div>
+        </div>
+        <div class="metric-row"><span class="metric-l">Answer rate</span><div><span class="metric-v">100%</span><span class="metric-d">+38pp</span></div></div>
+        <div class="metric-row"><span class="metric-l">Cost per booked job</span><div><span class="metric-v">$4.20</span><span class="metric-d">−82%</span></div></div>
+        <div class="metric-row"><span class="metric-l">Time saved this wk</span><div><span class="metric-v">52 hrs/wk</span></div></div>
+      </div>
+      <div class="trace-card">
+        <div style="color: var(--accent); margin-bottom: 16px;">// agent.trace · live</div>
+        <div id="trace-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="container">
+    <div class="eyebrow">// results</div>
+    <h2 class="h2" style="margin-bottom: 56px;">Quiet flex. Real numbers.</h2>
+    <div class="testimonial-grid">
+      <div class="testimonial">
+        <p class="testimonial-q">A 12-truck HVAC operator in Phoenix recovered $34,000 in missed-call revenue in their first 60 days. Before: 38% of after-hours calls going to voicemail. After: 100% answered, 41% converted to booked jobs. They added a second install crew within 90 days to keep up.</p>
+        <div class="testimonial-meta">— Anonymized at client's request. Available on request under NDA.</div>
+        <div class="testimonial-tag">+$34k recovered · 60 days</div>
+      </div>
+      <div class="testimonial placeholder">
+        <div class="placeholder-tag">// to replace · week 1–2</div>
+        <p class="testimonial-q" style="color: var(--ink3); font-style: italic;">First real client testimonial goes here. Run a "founding 10" promo: free first month in exchange for written + video testimonial.</p>
+      </div>
+      <div class="testimonial placeholder">
+        <div class="placeholder-tag">// to replace · week 1–2</div>
+        <p class="testimonial-q" style="color: var(--ink3); font-style: italic;">Second real client testimonial goes here. Aim for a different service vertical — plumber or roofer — to widen ICP coverage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="founder">
+  <div class="container">
+    <div class="founder-grid">
+      <div>
+        <div class="eyebrow">// /about</div>
+        <h2 class="h2" style="margin-bottom: 36px;">We built this for 200+ home service operators. Under someone else's name. <em>We're done with that.</em></h2>
+        <div class="founder-body">
+          <p>For the last year, our team has been the engine behind the AI systems other agencies sell to home service businesses. We architected the call flows. We trained the voice agents. We tuned the booking logic until it worked at 2 AM in a thunderstorm.</p>
+          <p>We watched these systems make our clients' clients millions of dollars in recovered revenue.</p>
+          <p>And we watched plumbers, HVAC operators, and roofing companies pay $5,000–$15,000 a month for the privilege — locked into 24-month contracts, talking to account managers who'd never been on a job site.</p>
+          <p>So we left.</p>
+          <p class="bold">AI Client Builder is the same systems. Direct from the operators who built them. At a fraction of the price. No contracts. No middlemen. No bullshit.</p>
+          <p>If you've been quoted $8,000/month for an "AI growth platform," you've been talking to the people who hired us. Talk to us instead.</p>
+          <div class="founder-sig">— [Your Name], Founder, AI Client Builder</div>
+        </div>
+      </div>
+      <div class="founder-photo">
+        [REPLACE WITH FOUNDER PHOTO]<br/><br/>High quality, professional but human. Ideally on a job site or with the team. Not a corporate headshot.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="pricing-head">
+      <div class="eyebrow">// pricing.json</div>
+      <h2 class="h2">One transparent price. Cancel anytime.</h2>
+      <p style="font-size: 17px; color: var(--ink3); margin: 12px 0 0;">No 24-month contracts. No surprise fees. If your AI doesn't book at least 10 jobs in 30 days, full refund.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="tier">
+        <div class="tier-name">> starter</div>
+        <div class="tier-price"><span class="tier-price-v">$497</span><span class="tier-price-mo">/mo</span></div>
+        <div class="tier-setup">+ $1,500 one-time setup</div>
+        <p class="tier-desc">1 location · live in 7 days</p>
+        <button class="tier-cta">$ deploy.starter</button>
+        <div class="tier-features">
+          <div class="tier-feature"><span class="check">✓</span>24/7 AI voice receptionist</div>
+          <div class="tier-feature"><span class="check">✓</span>Books jobs to GHL calendar</div>
+          <div class="tier-feature"><span class="check">✓</span>SMS missed-call text-back</div>
+          <div class="tier-feature"><span class="check">✓</span>Email & SMS support</div>
+          <div class="tier-feature"><span class="check">✓</span>Up to 100 calls/month</div>
+          <div class="tier-feature"><span class="check">✓</span>30-day money-back guarantee</div>
+        </div>
+      </div>
+      <div class="tier highlight">
+        <div class="tier-badge">most-deployed</div>
+        <div class="tier-name">> pro</div>
+        <div class="tier-price"><span class="tier-price-v">$997</span><span class="tier-price-mo">/mo</span></div>
+        <div class="tier-setup">+ $1,500 one-time setup</div>
+        <p class="tier-desc">Up to 3 locations · the full machine</p>
+        <button class="tier-cta">$ deploy.pro</button>
+        <div class="tier-features">
+          <div class="tier-feature"><span class="check">✓</span>Everything in Starter, plus:</div>
+          <div class="tier-feature"><span class="check">✓</span>Web form & Facebook lead AI</div>
+          <div class="tier-feature"><span class="check">✓</span>Google review automation</div>
+          <div class="tier-feature"><span class="check">✓</span>Google Business Profile integration</div>
+          <div class="tier-feature"><span class="check">✓</span>Up to 250 calls/month</div>
+          <div class="tier-feature"><span class="check">✓</span>Private Slack with our team</div>
+          <div class="tier-feature"><span class="check">✓</span>Bi-weekly performance reviews</div>
+        </div>
+      </div>
+      <div class="tier">
+        <div class="tier-name">> dominate</div>
+        <div class="tier-price"><span class="tier-price-v">$1,997</span><span class="tier-price-mo">/mo</span></div>
+        <div class="tier-setup">+ $1,500 one-time setup</div>
+        <p class="tier-desc">Unlimited locations · full reactivation engine</p>
+        <button class="tier-cta">$ deploy.dominate</button>
+        <div class="tier-features">
+          <div class="tier-feature"><span class="check">✓</span>Everything in Pro, plus:</div>
+          <div class="tier-feature"><span class="check">✓</span>AI past-customer reactivation</div>
+          <div class="tier-feature"><span class="check">✓</span>Seasonal campaign automation</div>
+          <div class="tier-feature"><span class="check">✓</span>Up to 500 calls/month</div>
+          <div class="tier-feature"><span class="check">✓</span>Dedicated success manager</div>
+          <div class="tier-feature"><span class="check">✓</span>Custom voice cloning (your tone)</div>
+          <div class="tier-feature"><span class="check">✓</span>Quarterly strategy calls</div>
+        </div>
+      </div>
+    </div>
+    <div class="pricing-math">
+      💡 <strong>The math:</strong> average client recovers $14,000–$40,000/month in jobs that would have gone to voicemail. The $497/mo plan pays for itself with one booked job.
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="faq-inner">
+    <div class="faq-head">
+      <div class="eyebrow" style="text-align:center;">// faq.md</div>
+      <h2 class="h2">The questions every operator asks us.</h2>
+    </div>
+    <div class="faq-list" id="faq-list">
+      <div class="faq-item open">
+        <button class="faq-q"><span><span class="faq-num">Q1</span>Will it sound like a robot? My customers will hate that.</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>No. Modern AI voice (built on the same tech behind ChatGPT Voice and ElevenLabs) is indistinguishable from a human in the first 30 seconds — and most calls end inside 30 seconds because we book the job that fast. We've A/B tested this with 200+ operators. Your customers won't know.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q2</span>What happens if the AI can't handle a call?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>It transfers. Every plan includes intelligent escalation — if a customer asks something outside scope (warranty dispute, complex commercial bid, etc.), the AI routes the call to your cell, your office, or whoever you designate. Zero dropped calls.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q3</span>Do I have to switch from ServiceTitan / Jobber / Housecall Pro?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>No. We integrate with all major home service CRMs and dispatch tools. If you have something custom, we build the integration. Your existing workflow doesn't change — it just gets more leads in the top of it.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q4</span>What if I'm a one-truck operation?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>Starter plan is built for you. Most of our solo operators recover their first month's cost in week one. The smaller you are, the more every missed call hurts — and the more you need this.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q5</span>How is this different from a regular answering service?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>Answering services cost $300–$600/month, take a message, and forget you exist. Our AI books the job, schedules the appointment, sends the confirmation, and follows up if the customer ghosts. It's the difference between a secretary and a sales rep.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q6</span>What's the catch?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>Honestly, the catch is your tolerance for change. The AI works. It books jobs. The biggest reason operators don't see results is they don't forward their phone line because they're nervous. We hold your hand through week one to make sure that doesn't happen.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q7</span>Refund policy?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>30 days. If your AI doesn't book at least 10 jobs in your first 30 days, full refund — including setup. We've never had to issue one. Doesn't mean we won't, but the offer's bulletproof for a reason.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <div class="cta-head">
+      <div class="eyebrow" style="text-align:center;">// ready_to_deploy</div>
+      <h2>Stop losing jobs to voicemail.<br/><em>7 days from now, your AI is answering.</em></h2>
+      <p>Book the audit. We ship the system. You watch the calendar fill up.</p>
+      <div class="cta-btns">
+        <button class="btn btn-primary-lg btn-xl">$ get-my-ai-receptionist →</button>
+        <button class="btn btn-ghost btn-xl">$ book-30min-audit</button>
+      </div>
+      <div class="trust-strip cta-trust">
+        <span><span class="gd"></span>30-day money-back</span>
+        <span><span class="gd"></span>No contracts</span>
+        <span><span class="gd"></span>Live in 7 days</span>
+        <span><span class="gd"></span>[#] operators booked this month</span>
+      </div>
+    </div>
+    <div class="footer">
+      <a href="#" class="logo">
+        <span class="logo-mark">
+          <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+            <path d="M8 11 L12 16 L8 21" stroke="#d6ff4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="14" y="20" width="10" height="1.6" fill="#d6ff4a" rx="0.8"/>
+          </svg>
+        </span>
+        <span class="logo-text"><span class="dim">~/</span>aiclientbuilder</span>
+      </a>
+      <div class="footer-links">
+        <a href="#">/home</a>
+        <a href="#">/pricing</a>
+        <a href="#">/how-it-works</a>
+        <a href="#">/book-a-call</a>
+        <a href="#">/privacy</a>
+        <a href="#">/terms</a>
+      </div>
+      <div class="footer-meta">aiclientbuilder.com · Built by operators, for operators · © 2026</div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function() {
+    var lines = [
+      { p: '$', c: 'acb init plumbing-co', d: 0 },
+      { t: '✓ Connected to your phone line, GHL, calendar (3.2s)', d: 800 },
+      { t: '✓ Imported 1,847 past customers · 14 service types detected', d: 1500 },
+      { p: '$', c: 'acb deploy --agent=24-7-receptionist', d: 2400 },
+      { t: '⠼ Training agent on your service area & pricing...', d: 3000 },
+      { t: '✓ Live. First call answered in 3.1s', d: 4200 },
+      { p: '$', c: 'acb status', d: 5200 },
+      { hi: '12 calls answered · 4 jobs booked · $3,840 in pipeline (today)', d: 6000 }
+    ];
+    var body = document.getElementById('terminal-body');
+    function start() {
+      lines.forEach(function(l, i) {
+        setTimeout(function() {
+          var div = document.createElement('div');
+          div.className = 'term-line';
+          if (l.p) div.innerHTML = '<span class="prompt">' + l.p + '</span> <span class="cmd">' + l.c + '</span>';
+          else if (l.hi) div.innerHTML = '<span class="hi">→ ' + l.hi + '</span>';
+          else div.innerHTML = '<span class="out">' + l.t + '</span>';
+          body.appendChild(div);
+          if (i === lines.length - 1) {
+            setTimeout(function() { var c = document.createElement('span'); c.className = 'term-cursor'; body.appendChild(c); }, 500);
+          }
+        }, l.d);
+      });
+    }
+    var obs = new IntersectionObserver(function(entries) { if (entries[0].isIntersecting) { start(); obs.disconnect(); } });
+    obs.observe(body);
+  })();
+
+  (function() {
+    var trace = [
+      { t: '02:47:11.302', e: 'call.in', d: '+1-602-555-0193' },
+      { t: '02:47:11.418', e: 'transcribe', d: '"...water heater leaking everywhere..."' },
+      { t: '02:47:11.512', e: 'classify', d: 'emergency · water_heater · phoenix' },
+      { t: '02:47:11.703', e: 'lookup', d: 'pricing.water_heater_emergency' },
+      { t: '02:47:11.801', e: 'tool.call', d: 'check_calendar(tech=jose, today)' },
+      { t: '02:47:12.142', e: 'compose', d: '"I can have Jose at your place by 4 AM..."' },
+      { t: '02:47:12.910', e: 'tool.call', d: 'book_job(slot=04:00, tech=jose, $389)' },
+      { t: '02:47:13.044', e: 'sms.send', d: 'confirmation_sent · job_id=4029' }
+    ];
+    var list = document.getElementById('trace-list');
+    trace.forEach(function(l, i) {
+      var row = document.createElement('div');
+      row.className = 'trace-row';
+      row.innerHTML = '<span class="trace-t">' + l.t + '</span><span class="trace-e">' + l.e + '</span><span>' + l.d + '</span>';
+      list.appendChild(row);
+    });
+  })();
+
+  (function() {
+    var els = document.querySelectorAll('[data-count]');
+    els.forEach(function(el) { el.textContent = el.getAttribute('data-count'); });
+  })();
+
+  document.getElementById('faq-list').addEventListener('click', function(e) {
+    var btn = e.target.closest('.faq-q');
+    if (!btn) return;
+    var item = btn.parentElement;
+    var wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(x) { x.classList.remove('open'); });
+    if (!wasOpen) item.classList.add('open');
+  });
+</script>
+
+</body>
+</html>
