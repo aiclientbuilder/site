@@ -412,6 +412,14 @@ const traceLines = [
         <span><span class="gd"></span>12 operators booked this month</span>
       </div>
     </div>
+    <nav class="footer-niches" aria-label="Industries">
+      <div class="footer-niches-label">// by industry</div>
+      <ul class="footer-niches-grid">
+        {niches.map((n) => (
+          <li><a href={`/${n.slug}`}>{n.name}</a></li>
+        ))}
+      </ul>
+    </nav>
     <div class="footer">
       <a href="/" class="logo">
         <span class="logo-mark">

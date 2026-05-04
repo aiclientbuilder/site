@@ -227,7 +227,14 @@ const canonicalUrl = canonical ?? Astro.url.pathname;
   .cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
   .cta-trust { justify-content: center; }
 
-  .footer { margin-top: 80px; padding-top: 32px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; max-width: 1180px; margin-left: auto; margin-right: auto; }
+  .footer-niches { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--line); max-width: 1180px; margin-left: auto; margin-right: auto; }
+  .footer-niches-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 18px; }
+  .footer-niches-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 24px; list-style: none; padding: 0; margin: 0; }
+  .footer-niches-grid li { font-size: 0; }
+  .footer-niches-grid a { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink3); transition: color 0.15s; display: inline-block; }
+  .footer-niches-grid a:hover { color: var(--accent); }
+
+  .footer { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; max-width: 1180px; margin-left: auto; margin-right: auto; }
   .footer-links { display: flex; gap: 24px; font-size: 13px; color: var(--ink3); font-family: 'JetBrains Mono', monospace; flex-wrap: wrap; }
   .footer-meta { font-size: 12px; color: var(--ink3); font-family: 'JetBrains Mono', monospace; }
 
@@ -249,6 +256,7 @@ const canonicalUrl = canonical ?? Astro.url.pathname;
     .how-grid { grid-template-columns: 1fr; gap: 24px; }
     .how-line { display: none; }
     .niche-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-niches-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
