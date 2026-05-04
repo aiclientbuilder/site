@@ -1,0 +1,490 @@
+---
+import { niches, type Niche } from '~/data/niches';
+
+interface Props {
+  niche?: Niche;
+}
+
+const { niche } = Astro.props;
+
+// home page defaults — what you see when no niche is set
+const home = {
+  name: 'home services',
+  fullName: 'home service operators',
+  hero: {
+    lossAmount: '$40,000',
+    badgeText: 'Now booking 50 home-service operators in the US',
+    subExample: "on the roof, in a crawlspace, or asleep",
+  },
+  pain: { avgJobValue: '$487' },
+  terminal: {
+    companyName: 'home-service-co',
+    callTime: '02:47:11.302',
+    callerNumber: '+1-602-555-0193',
+    emergencyQuote: '"...water heater leaking everywhere..."',
+    classifyTags: 'emergency · water_heater · phoenix',
+    pricingLookup: 'pricing.water_heater_emergency',
+    techName: 'jose',
+    composeQuote: '"I can have Jose at your place by 4 AM..."',
+    bookSlot: '04:00',
+    jobPrice: '$389',
+    jobId: '4029',
+    pipelineLine: '12 calls answered · 4 jobs booked · $3,840 in pipeline (today)',
+  },
+};
+
+const data = niche ?? home;
+const isHome = !niche;
+
+// pick 3 testimonials: current niche/HVAC first, then two others for variety
+const primaryTestimonial = niche
+  ? { ...niche.testimonial, name: niche.name }
+  : { ...niches.find((n) => n.slug === 'hvac')!.testimonial, name: 'HVAC' };
+
+const otherNiches = niches
+  .filter((n) => n.slug !== (niche?.slug ?? 'hvac'))
+  .filter((n) => (niche ? true : n.slug !== 'hvac'))
+  .slice(0, 2);
+
+const testimonials = [
+  primaryTestimonial,
+  ...otherNiches.map((n) => ({ ...n.testimonial, name: n.name })),
+];
+
+// for the demo section header — adapt to niche
+const demoTitle = niche
+  ? `Watch your AI book a ${niche.name.toLowerCase()} job at 2:47 AM.`
+  : 'Watch your AI book a job at 2:47 AM.';
+
+// founder name (placeholder until real founder named)
+const founderName = 'Marcus Webb';
+const founderInitials = 'MW';
+
+// dynamic trace lines for the demo card — niche-specific
+const traceLines = [
+  { t: data.terminal.callTime, e: 'call.in', d: data.terminal.callerNumber },
+  { t: data.terminal.callTime, e: 'transcribe', d: data.terminal.emergencyQuote },
+  { t: data.terminal.callTime, e: 'classify', d: data.terminal.classifyTags },
+  { t: data.terminal.callTime, e: 'lookup', d: data.terminal.pricingLookup },
+  { t: data.terminal.callTime, e: 'tool.call', d: `check_calendar(tech=${data.terminal.techName}, today)` },
+  { t: data.terminal.callTime, e: 'compose', d: data.terminal.composeQuote },
+  { t: data.terminal.callTime, e: 'tool.call', d: `book_job(slot=${data.terminal.bookSlot}, tech=${data.terminal.techName}, ${data.terminal.jobPrice})` },
+  { t: data.terminal.callTime, e: 'sms.send', d: `confirmation_sent · job_id=${data.terminal.jobId}` },
+];
+---
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <span class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+          <path d="M8 11 L12 16 L8 21" stroke="#d6ff4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="14" y="20" width="10" height="1.6" fill="#d6ff4a" rx="0.8"/>
+        </svg>
+      </span>
+      <span class="logo-text"><span class="dim">~/</span>aiclientbuilder</span>
+    </a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#">Login</a>
+    </div>
+    <div class="nav-cta">
+      <button class="btn btn-primary">→ Get my AI receptionist</button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="container" style="position: relative;">
+    <div class="pill">
+      <span class="dot"></span>
+      LIVE · {data.hero.badgeText}
+    </div>
+    <h1>Stop losing {data.hero.lossAmount} a month in <em>missed calls.</em></h1>
+    <p class="hero-sub">
+      Your AI receptionist answers every call, books every job, and follows up on every lead — 24/7, 365. While you're {data.hero.subExample}. Live in 7 days. Cancel anytime.
+    </p>
+    <div class="hero-ctas">
+      <button class="btn btn-primary-lg">$ get-my-ai-receptionist →</button>
+      <button class="btn btn-ghost">▶ watch 90-second demo</button>
+    </div>
+    <div class="trust-strip">
+      <span><span class="gd"></span>No contracts</span>
+      <span><span class="gd"></span>30-day money-back</span>
+      <span><span class="gd"></span>Built on systems we deployed for hundreds of {data.fullName}</span>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dots">
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot live"></span>
+        </div>
+        <span style="margin-left: 8px;">~/{data.terminal.companyName}/acb · zsh</span>
+        <span style="margin-left: auto; color: var(--accent);">● live</span>
+      </div>
+      <div class="terminal-body" id="terminal-body"></div>
+    </div>
+  </div>
+</section>
+
+<section class="pain">
+  <div class="container">
+    <div class="pain-head">
+      <div class="eyebrow">// the math nobody shows you</div>
+      <h2 class="h2">You're not losing leads. You're losing <em>jobs.</em></h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-cell">
+        <div class="pain-stat">62%</div>
+        <div class="pain-label">of after-hours calls go unanswered in {data.name}</div>
+        <p class="pain-body">Every one is a customer who calls the next guy on Google. Average job value: {data.pain.avgJobValue}. Multiply by your missed calls last month.</p>
+      </div>
+      <div class="pain-cell">
+        <div class="pain-stat">5 min</div>
+        <div class="pain-label">is the window before a web lead goes cold</div>
+        <p class="pain-body">If you take 30 minutes to call back a Yelp lead, your close rate drops 80%. Not a typo. Eighty percent.</p>
+      </div>
+      <div class="pain-cell">
+        <div class="pain-stat">73%</div>
+        <div class="pain-label">of past customers never get a follow-up call</div>
+        <p class="pain-body">Your best buyer is the one you already worked for. Most of you never call them again. That's a six-figure mistake hiding in your CRM.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-v">7d</div><div class="stat-l">avg. time to live</div></div>
+    <div class="stat"><div class="stat-v">200+</div><div class="stat-l">systems deployed</div></div>
+    <div class="stat"><div class="stat-v">$0</div><div class="stat-l">long-term contracts</div></div>
+    <div class="stat"><div class="stat-v">24/7</div><div class="stat-l">always answering</div></div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="container">
+    <div class="how-head">
+      <div class="eyebrow">// process</div>
+      <h2 class="h2">From signup to live in 7 days. Then it just works.</h2>
+    </div>
+    <div class="how-grid">
+      <div class="how-line"></div>
+      <div class="how-step"><div class="how-dot"><div class="how-dot-inner"></div></div><div class="how-d">DAY 1</div><h4>Audit</h4><p>30-min onboarding call. We learn your services, pricing, service area, and the questions you get asked 50 times a week.</p></div>
+      <div class="how-step"><div class="how-dot"><div class="how-dot-inner"></div></div><div class="how-d">DAY 2</div><h4>Train</h4><p>We build your AI on your business — your voice, your tone, your scripts. Not a generic chatbot. Your AI knows you charge $189 for a drain clearing in Tucson.</p></div>
+      <div class="how-step"><div class="how-dot"><div class="how-dot-inner"></div></div><div class="how-d">DAY 3-5</div><h4>Connect</h4><p>Plug into your phone line, GHL, Google Calendar, and (if you use them) ServiceTitan, Housecall Pro, or Jobber. Zero disruption to current ops.</p></div>
+      <div class="how-step"><div class="how-dot"><div class="how-dot-inner"></div></div><div class="how-d">DAY 6</div><h4>Test</h4><p>You call your AI. Your spouse calls your AI. We tune until you'd hire it as your front desk.</p></div>
+      <div class="how-step"><div class="how-dot"><div class="how-dot-inner"></div></div><div class="how-d">DAY 7</div><h4>Live</h4><p>Phone forwards activate. Your AI answers every call. You watch jobs hit your calendar in real time.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container">
+    <div class="features-head">
+      <div class="eyebrow">// capabilities</div>
+      <h2 class="h2">Everything a $60k/year receptionist does. For $497 a month.</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature"><div class="feature-k">01 //</div><h3>24/7 AI voice receptionist</h3><p>Answers every call in under 3 seconds. Sounds human. Books jobs straight to your calendar. Never sick, never on lunch, never on PTO.</p></div>
+      <div class="feature"><div class="feature-k">02 //</div><h3>Missed-call text-back</h3><p>The instant a call is missed (yours or your AI's), customer gets a text: "Hey, sorry we missed you — what can we help with?" 67% reply. You book the job.</p></div>
+      <div class="feature"><div class="feature-k">03 //</div><h3>Web form & Facebook lead AI</h3><p>Every form fill, FB lead, Yelp request gets a personalized reply in under 60 seconds. While your competitors are still asleep.</p></div>
+      <div class="feature"><div class="feature-k">04 //</div><h3>Past-customer reactivation</h3><p>Your AI calls/texts customers from your last 12 months. "Hey, last time we worked with you — ready for an annual check?" Recurring revenue, on autopilot.</p></div>
+      <div class="feature"><div class="feature-k">05 //</div><h3>Review automation</h3><p>After every job, your AI texts the customer for a Google review at the perfect moment. Most operators see 3–5× their review velocity in 60 days.</p></div>
+      <div class="feature"><div class="feature-k">06 //</div><h3>GHL-native, you own the data</h3><p>Built on GoHighLevel — you own the workflows, the contacts, the data. We're not a black box. Cancel anytime, take everything with you.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="demo">
+  <div class="container">
+    <div class="demo-head">
+      <div class="eyebrow">// live preview</div>
+      <h2 class="h2">{demoTitle}</h2>
+    </div>
+    <div class="demo-grid">
+      <div class="agent-card">
+        <div class="agent-head">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);"></span>
+          <span style="color: var(--ink);">agent: 24-7-receptionist</span>
+          <span style="margin-left:auto;color:var(--ink3);">uptime 99.97%</span>
+        </div>
+        <div class="agent-stats">
+          <div class="agent-stat"><div class="agent-stat-v" data-count="47">47</div><div class="agent-stat-l">leads handled</div></div>
+          <div class="agent-stat"><div class="agent-stat-v" data-count="19">19</div><div class="agent-stat-l">jobs booked</div></div>
+          <div class="agent-stat"><div class="agent-stat-v">47s</div><div class="agent-stat-l">avg time-to-book</div></div>
+        </div>
+        <div class="metric-row"><span class="metric-l">Answer rate</span><div><span class="metric-v">100%</span><span class="metric-d">+38pp</span></div></div>
+        <div class="metric-row"><span class="metric-l">Cost per booked job</span><div><span class="metric-v">$4.20</span><span class="metric-d">−82%</span></div></div>
+        <div class="metric-row"><span class="metric-l">Time saved this wk</span><div><span class="metric-v">52 hrs/wk</span></div></div>
+      </div>
+      <div class="trace-card">
+        <div style="color: var(--accent); margin-bottom: 16px;">// agent.trace · live</div>
+        <div id="trace-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="container">
+    <div class="eyebrow">// results</div>
+    <h2 class="h2" style="margin-bottom: 56px;">Quiet flex. Real numbers.</h2>
+    <div class="testimonial-grid">
+      {testimonials.map((t) => (
+        <div class="testimonial">
+          <p class="testimonial-q">A {t.operator} in {t.city} recovered {t.recovered} in missed-call revenue. {t.detail}</p>
+          <div class="testimonial-meta">— Anonymized at client's request. Available on request under NDA.</div>
+          <div class="testimonial-tag">{t.tag}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="founder">
+  <div class="container">
+    <div class="founder-grid">
+      <div>
+        <div class="eyebrow">// /about</div>
+        <h2 class="h2" style="margin-bottom: 36px;">We built this for hundreds of {data.fullName}. Under someone else's name. <em>We're done with that.</em></h2>
+        <div class="founder-body">
+          <p>For the last year, our team has been the engine behind the AI systems other agencies sell to {data.fullName}. We architected the call flows. We trained the voice agents. We tuned the booking logic until it worked at 2 AM in a thunderstorm.</p>
+          <p>We watched these systems make our clients' clients millions of dollars in recovered revenue.</p>
+          <p>And we watched {data.fullName} pay $5,000–$15,000 a month for the privilege — locked into 24-month contracts, talking to account managers who'd never been on a job site.</p>
+          <p>So we left.</p>
+          <p class="bold">AI Client Builder is the same systems. Direct from the operators who built them. At a fraction of the price. No contracts. No middlemen. No bullshit.</p>
+          <p>If you've been quoted $8,000/month for an "AI growth platform," you've been talking to the people who hired us. Talk to us instead.</p>
+          <div class="founder-sig">— {founderName}, Founder, AI Client Builder</div>
+        </div>
+      </div>
+      <div class="founder-photo">
+        <div class="founder-avatar">{founderInitials}</div>
+        <div class="founder-photo-name">{founderName}</div>
+        <div class="founder-photo-role">Founder</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="pricing-head">
+      <div class="eyebrow">// pricing.json</div>
+      <h2 class="h2">One transparent price. Cancel anytime.</h2>
+      <p style="font-size: 17px; color: var(--ink3); margin: 12px 0 0;">No 24-month contracts. No surprise fees. If your AI doesn't book at least 10 jobs in 30 days, full refund.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="tier">
+        <div class="tier-name">> starter</div>
+        <div class="tier-price"><span class="tier-price-v">$497</span><span class="tier-price-mo">/mo</span></div>
+        <div class="tier-setup">+ $1,500 one-time setup</div>
+        <p class="tier-desc">1 location · live in 7 days</p>
+        <button class="tier-cta">$ deploy.starter</button>
+        <div class="tier-features">
+          <div class="tier-feature"><span class="check">✓</span>24/7 AI voice receptionist</div>
+          <div class="tier-feature"><span class="check">✓</span>Books jobs to GHL calendar</div>
+          <div class="tier-feature"><span class="check">✓</span>SMS missed-call text-back</div>
+          <div class="tier-feature"><span class="check">✓</span>Email & SMS support</div>
+          <div class="tier-feature"><span class="check">✓</span>Up to 100 calls/month</div>
+          <div class="tier-feature"><span class="check">✓</span>30-day money-back guarantee</div>
+        </div>
+      </div>
+      <div class="tier highlight">
+        <div class="tier-badge">most-deployed</div>
+        <div class="tier-name">> pro</div>
+        <div class="tier-price"><span class="tier-price-v">$997</span><span class="tier-price-mo">/mo</span></div>
+        <div class="tier-setup">+ $1,500 one-time setup</div>
+        <p class="tier-desc">Up to 3 locations · the full machine</p>
+        <button class="tier-cta">$ deploy.pro</button>
+        <div class="tier-features">
+          <div class="tier-feature"><span class="check">✓</span>Everything in Starter, plus:</div>
+          <div class="tier-feature"><span class="check">✓</span>Web form & Facebook lead AI</div>
+          <div class="tier-feature"><span class="check">✓</span>Google review automation</div>
+          <div class="tier-feature"><span class="check">✓</span>Google Business Profile integration</div>
+          <div class="tier-feature"><span class="check">✓</span>Up to 250 calls/month</div>
+          <div class="tier-feature"><span class="check">✓</span>Private Slack with our team</div>
+          <div class="tier-feature"><span class="check">✓</span>Bi-weekly performance reviews</div>
+        </div>
+      </div>
+      <div class="tier">
+        <div class="tier-name">> dominate</div>
+        <div class="tier-price"><span class="tier-price-v">$1,997</span><span class="tier-price-mo">/mo</span></div>
+        <div class="tier-setup">+ $1,500 one-time setup</div>
+        <p class="tier-desc">Unlimited locations · full reactivation engine</p>
+        <button class="tier-cta">$ deploy.dominate</button>
+        <div class="tier-features">
+          <div class="tier-feature"><span class="check">✓</span>Everything in Pro, plus:</div>
+          <div class="tier-feature"><span class="check">✓</span>AI past-customer reactivation</div>
+          <div class="tier-feature"><span class="check">✓</span>Seasonal campaign automation</div>
+          <div class="tier-feature"><span class="check">✓</span>Up to 500 calls/month</div>
+          <div class="tier-feature"><span class="check">✓</span>Dedicated success manager</div>
+          <div class="tier-feature"><span class="check">✓</span>Custom voice cloning (your tone)</div>
+          <div class="tier-feature"><span class="check">✓</span>Quarterly strategy calls</div>
+        </div>
+      </div>
+    </div>
+    <div class="pricing-math">
+      💡 <strong>The math:</strong> average client recovers $14,000–$40,000/month in jobs that would have gone to voicemail. The $497/mo plan pays for itself with one booked job.
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="faq-inner">
+    <div class="faq-head">
+      <div class="eyebrow" style="text-align:center;">// faq.md</div>
+      <h2 class="h2">The questions every operator asks us.</h2>
+    </div>
+    <div class="faq-list" id="faq-list">
+      <div class="faq-item open">
+        <button class="faq-q"><span><span class="faq-num">Q1</span>Will it sound like a robot? My customers will hate that.</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>No. Modern AI voice (built on the same tech behind ChatGPT Voice and ElevenLabs) is indistinguishable from a human in the first 30 seconds — and most calls end inside 30 seconds because we book the job that fast. We've A/B tested this with hundreds of operators. Your customers won't know.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q2</span>What happens if the AI can't handle a call?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>It transfers. Every plan includes intelligent escalation — if a customer asks something outside scope (warranty dispute, complex commercial bid, etc.), the AI routes the call to your cell, your office, or whoever you designate. Zero dropped calls.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q3</span>Do I have to switch from ServiceTitan / Jobber / Housecall Pro?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>No. We integrate with all major home service CRMs and dispatch tools. If you have something custom, we build the integration. Your existing workflow doesn't change — it just gets more leads in the top of it.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q4</span>What if I'm a one-truck operation?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>Starter plan is built for you. Most of our solo operators recover their first month's cost in week one. The smaller you are, the more every missed call hurts — and the more you need this.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q5</span>How is this different from a regular answering service?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>Answering services cost $300–$600/month, take a message, and forget you exist. Our AI books the job, schedules the appointment, sends the confirmation, and follows up if the customer ghosts. It's the difference between a secretary and a sales rep.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q6</span>What's the catch?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>Honestly, the catch is your tolerance for change. The AI works. It books jobs. The biggest reason operators don't see results is they don't forward their phone line because they're nervous. We hold your hand through week one to make sure that doesn't happen.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="faq-num">Q7</span>Refund policy?</span><span class="faq-plus">+</span></button>
+        <div class="faq-a"><p>30 days. If your AI doesn't book at least 10 jobs in your first 30 days, full refund — including setup. We've never had to issue one. Doesn't mean we won't, but the offer's bulletproof for a reason.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{isHome && (
+  <section class="niche-index">
+    <div class="container">
+      <div class="niche-index-head">
+        <div class="eyebrow">// industries</div>
+        <h2 class="h2">Built for your industry. <em>Not a generic chatbot.</em></h2>
+        <p style="font-size: 16px; color: var(--ink3); margin: 14px 0 0; max-width: 600px;">Pick yours — we've already tuned the call scripts, pricing logic, and emergency routing for your specific business.</p>
+      </div>
+      <div class="niche-grid">
+        {niches.map((n) => (
+          <a href={`/${n.slug}/`} class="niche-tile">
+            <span class="niche-tile-name">{n.name}</span>
+            <span class="niche-tile-arrow">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<section class="cta">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <div class="cta-head">
+      <div class="eyebrow" style="text-align:center;">// ready_to_deploy</div>
+      <h2>Stop losing jobs to voicemail.<br/><em>7 days from now, your AI is answering.</em></h2>
+      <p>Book the audit. We ship the system. You watch the calendar fill up.</p>
+      <div class="cta-btns">
+        <button class="btn btn-primary-lg btn-xl">$ get-my-ai-receptionist →</button>
+        <button class="btn btn-ghost btn-xl">$ book-30min-audit</button>
+      </div>
+      <div class="trust-strip cta-trust">
+        <span><span class="gd"></span>30-day money-back</span>
+        <span><span class="gd"></span>No contracts</span>
+        <span><span class="gd"></span>Live in 7 days</span>
+        <span><span class="gd"></span>12 operators booked this month</span>
+      </div>
+    </div>
+    <div class="footer">
+      <a href="/" class="logo">
+        <span class="logo-mark">
+          <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+            <path d="M8 11 L12 16 L8 21" stroke="#d6ff4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="14" y="20" width="10" height="1.6" fill="#d6ff4a" rx="0.8"/>
+          </svg>
+        </span>
+        <span class="logo-text"><span class="dim">~/</span>aiclientbuilder</span>
+      </a>
+      <div class="footer-links">
+        <a href="/">/home</a>
+        <a href="/#pricing">/pricing</a>
+        <a href="/#how">/how-it-works</a>
+        <a href="#">/book-a-call</a>
+        <a href="#">/privacy</a>
+        <a href="#">/terms</a>
+      </div>
+      <div class="footer-meta">aiclientbuilder.com · Built by operators, for operators · © 2026</div>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ companyName: data.terminal.companyName, traceLines, pipelineLine: data.terminal.pipelineLine }}>
+  (function() {
+    var lines = [
+      { p: '$', c: 'acb init ' + companyName, d: 0 },
+      { t: '✓ Connected to your phone line, GHL, calendar (3.2s)', d: 800 },
+      { t: '✓ Imported 1,847 past customers · 14 service types detected', d: 1500 },
+      { p: '$', c: 'acb deploy --agent=24-7-receptionist', d: 2400 },
+      { t: '⠼ Training agent on your service area & pricing...', d: 3000 },
+      { t: '✓ Live. First call answered in 3.1s', d: 4200 },
+      { p: '$', c: 'acb status', d: 5200 },
+      { hi: pipelineLine, d: 6000 }
+    ];
+    var body = document.getElementById('terminal-body');
+    if (!body) return;
+    function start() {
+      lines.forEach(function(l, i) {
+        setTimeout(function() {
+          var div = document.createElement('div');
+          div.className = 'term-line';
+          if (l.p) div.innerHTML = '<span class="prompt">' + l.p + '</span> <span class="cmd">' + l.c + '</span>';
+          else if (l.hi) div.innerHTML = '<span class="hi">→ ' + l.hi + '</span>';
+          else div.innerHTML = '<span class="out">' + l.t + '</span>';
+          body.appendChild(div);
+          if (i === lines.length - 1) {
+            setTimeout(function() { var c = document.createElement('span'); c.className = 'term-cursor'; body.appendChild(c); }, 500);
+          }
+        }, l.d);
+      });
+    }
+    var obs = new IntersectionObserver(function(entries) { if (entries[0].isIntersecting) { start(); obs.disconnect(); } });
+    obs.observe(body);
+  })();
+
+  (function() {
+    var list = document.getElementById('trace-list');
+    if (!list) return;
+    traceLines.forEach(function(l) {
+      var row = document.createElement('div');
+      row.className = 'trace-row';
+      row.innerHTML = '<span class="trace-t">' + l.t + '</span><span class="trace-e">' + l.e + '</span><span>' + l.d + '</span>';
+      list.appendChild(row);
+    });
+  })();
+
+  document.getElementById('faq-list').addEventListener('click', function(e) {
+    var btn = e.target.closest('.faq-q');
+    if (!btn) return;
+    var item = btn.parentElement;
+    var wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(x) { x.classList.remove('open'); });
+    if (!wasOpen) item.classList.add('open');
+  });
+</script>
